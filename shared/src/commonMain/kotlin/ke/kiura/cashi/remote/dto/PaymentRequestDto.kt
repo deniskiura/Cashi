@@ -9,6 +9,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class PaymentRequestDto(
     val recipientEmail: String,
-    val amount: Double,
+    val amount: Int,
     val currency: String
 )

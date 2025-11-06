@@ -9,8 +9,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class TransactionDto(
     val id: String,
-    val recipientEmail: String,
-    val amount: Double,
+    val recipient: String,
+    val amount: Int, // 1.00$ is represented as 100
     val currency: String,
     val timestamp: Long,
     val status: String

@@ -15,17 +15,21 @@ kotlin {
         }
     }
     
-    listOf(
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "Shared"
-            isStatic = true
-        }
-    }
+//    listOf(
+//        iosArm64(),
+//        iosSimulatorArm64()
+//    ).forEach { iosTarget ->
+//        iosTarget.binaries.framework {
+//            baseName = "Shared"
+//            isStatic = true
+//        }
+//    }
     
     sourceSets {
+        androidMain.dependencies {
+            // Koin Android
+            implementation(libs.koin.android)
+        }
         commonMain.dependencies {
             // Coroutines
             implementation(libs.kotlinx.coroutines.core)
@@ -69,6 +73,13 @@ android {
 
 dependencies {
     add("kspAndroid", libs.room.compiler)
+}
+
+configurations.all {
+    exclude(group = "com.intellij", module = "annotations")
+    resolutionStrategy {
+        force("org.jetbrains:annotations:23.0.0")
+    }
 }
 
 room {

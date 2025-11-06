@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 data class PaymentResponseDto(
     val id: String,
     val recipientEmail: String,
-    val amount: Double,
+    val amount: Int,
     val currency: String,
     val timestamp: Long,
     val status: String

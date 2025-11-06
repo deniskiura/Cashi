@@ -1,36 +1,45 @@
 package ke.kiura.cashi
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import org.jetbrains.compose.resources.painterResource
+import ke.kiura.cashi.presentation.history.TransactionHistoryScreen
+import ke.kiura.cashi.presentation.history.TransactionHistoryViewModel
+import ke.kiura.cashi.presentation.sending.SendPaymentScreen
+import ke.kiura.cashi.presentation.sending.SendPaymentViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.androidx.compose.koinViewModel
 
-import cashi.composeapp.generated.resources.Res
-import cashi.composeapp.generated.resources.compose_multiplatform
+sealed class Screen {
+    data object SendPayment : Screen()
+    data object TransactionHistory : Screen()
+}
 
 @Composable
 @Preview
 fun App() {
     MaterialTheme {
-        Column(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.primaryContainer)
-                .safeContentPadding()
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
+        CashiApp()
+    }
+}
 
+@Composable
+fun CashiApp() {
+    var currentScreen by remember { mutableStateOf<Screen>(Screen.SendPayment) }
+
+    when (currentScreen) {
+        Screen.SendPayment -> {
+            val viewModel: SendPaymentViewModel = koinViewModel()
+            SendPaymentScreen(
+                viewModel = viewModel,
+                onNavigateToHistory = { currentScreen = Screen.TransactionHistory }
+            )
+        }
+        Screen.TransactionHistory -> {
+            val viewModel: TransactionHistoryViewModel = koinViewModel()
+            TransactionHistoryScreen(
+                viewModel = viewModel,
+                onNavigateBack = { currentScreen = Screen.SendPayment }
+            )
         }
     }
 }

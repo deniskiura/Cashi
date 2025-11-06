@@ -22,10 +22,10 @@ fun Payment.toDto(): PaymentRequestDto {
 fun PaymentResponseDto.toDomain(): Transaction {
     return Transaction(
         id = id,
-        recipientEmail = recipientEmail,
+        recipient = recipientEmail,
         amount = amount,
         currency = Currency.fromCode(currency) ?: Currency.USD,
-        timestamp = Instant.fromEpochMilliseconds(timestamp),
+        timestamp = Instant.fromEpochMilliseconds(timestamp).toString(),
         status = when (status.uppercase()) {
             "PENDING" -> TransactionStatus.PENDING
             "COMPLETED" -> TransactionStatus.COMPLETED

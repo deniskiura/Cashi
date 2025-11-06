@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Payment(
     val recipientEmail: String,
-    val amount: Double,
+    val amount: Int,
     val currency: Currency
 ) {
     /**

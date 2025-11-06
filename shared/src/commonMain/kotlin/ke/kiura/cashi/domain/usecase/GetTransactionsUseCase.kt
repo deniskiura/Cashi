@@ -1,5 +1,6 @@
 package ke.kiura.cashi.domain.usecase
 
+import ke.kiura.cashi.domain.common.DomainState
 import ke.kiura.cashi.domain.model.Transaction
 import ke.kiura.cashi.domain.repository.TransactionRepository
 import kotlinx.coroutines.flow.Flow
@@ -11,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 class GetTransactionsUseCase(
     private val transactionRepository: TransactionRepository
 ) {
-    operator fun invoke(): Flow<Result<List<Transaction>>> {
+    operator fun invoke(): Flow<DomainState<List<Transaction>>> {
         return transactionRepository.getTransactions()
     }
 }
