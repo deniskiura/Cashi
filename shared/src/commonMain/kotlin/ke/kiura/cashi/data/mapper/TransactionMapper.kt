@@ -6,10 +6,11 @@ import ke.kiura.cashi.domain.model.Payment
 import ke.kiura.cashi.domain.model.Transaction
 import ke.kiura.cashi.domain.model.TransactionStatus
 import ke.kiura.cashi.remote.dto.TransactionDto
+import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import kotlin.time.ExperimentalTime
-import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 // DTO mappers
 @OptIn(ExperimentalTime::class)
@@ -61,7 +62,7 @@ fun TransactionEntity.toDomain(): Transaction {
         recipient = recipientEmail,
         amount = amount, // Already in cents
         currency = Currency.fromCode(currencyCode) ?: Currency.USD,
-        timestamp = timestamp.toString(),
+        timestamp = formatTimestamp(timestamp),
         status = when (status.uppercase()) {
             "PENDING" -> TransactionStatus.PENDING
             "COMPLETED" -> TransactionStatus.COMPLETED
@@ -69,6 +70,39 @@ fun TransactionEntity.toDomain(): Transaction {
             else -> TransactionStatus.PENDING
         }
     )
+}
+
+@OptIn(ExperimentalTime::class)
+fun TransactionEntity.toDto(): TransactionDto {
+    return TransactionDto(
+        id = id,
+        recipient = recipientEmail,
+        amount = amount, // Already in cents
+        currency = currencyCode,
+        timestamp = timestamp,
+        status = status
+    )
+}
+
+// Helper function to format timestamp to readable format
+@OptIn(ExperimentalTime::class)
+private fun formatTimestamp(timestampMillis: Long): String {
+    val instant = Instant.fromEpochMilliseconds(timestampMillis)
+    val dateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
+
+    // Format as "Jan 15, 2:30 PM"
+    val month = when (dateTime.month.ordinal + 1) {
+        1 -> "Jan"; 2 -> "Feb"; 3 -> "Mar"; 4 -> "Apr"
+        5 -> "May"; 6 -> "Jun"; 7 -> "Jul"; 8 -> "Aug"
+        9 -> "Sep"; 10 -> "Oct"; 11 -> "Nov"; 12 -> "Dec"
+        else -> ""
+    }
+
+    val hour = if (dateTime.hour == 0) 12 else if (dateTime.hour > 12) dateTime.hour - 12 else dateTime.hour
+    val amPm = if (dateTime.hour < 12) "AM" else "PM"
+    val minute = dateTime.minute.toString().padStart(2, '0')
+
+    return "$month ${dateTime.day}, $hour:$minute $amPm"
 }
 
 // Payment to Entity mapper

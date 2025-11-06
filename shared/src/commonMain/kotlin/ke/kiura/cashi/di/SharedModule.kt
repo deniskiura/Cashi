@@ -27,7 +27,9 @@ val sharedModule = module {
     }
 
     single<TransactionRepository> {
-        TransactionRepositoryImpl()
+        TransactionRepositoryImpl(
+            transactionDao = get()
+        )
     }
 
     // Use Cases

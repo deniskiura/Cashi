@@ -27,54 +27,54 @@ class PaymentRepositoryImpl(
 
     @OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
     override suspend fun processPayment(payment: Payment): DomainState<Transaction> {
-        return try {
-            // Generate transaction ID and timestamp
-            val transactionId = Uuid.random().toString()
-            val timestamp = now().toEpochMilliseconds()
 
-            // Create pending transaction entity
-            val transactionEntity = payment.toEntity(
-                id = transactionId,
-                timestamp = timestamp,
-                status = TransactionStatus.PENDING
-            )
+        // Generate transaction ID and timestamp
+        val transactionId = Uuid.random().toString()
+        val timestamp = now().toEpochMilliseconds()
 
-            // Save to local database first
-            transactionDao.insertTransaction(transactionEntity)
-            val transaction = transactionEntity.toDomain()
+        // Create pending transaction entity
+        val transactionEntity = payment.toEntity(
+            id = transactionId,
+            timestamp = timestamp,
+            status = TransactionStatus.PENDING
+        )
 
-            // Send to remote API
-            when (val result = remoteApi.saveTransaction(transaction.toDto())) {
-                is Remote.Success -> {
-                    // Update status to COMPLETED
-                    val completedEntity = transactionEntity.copy(status = TransactionStatus.COMPLETED.name)
-                    transactionDao.updateTransaction(completedEntity)
-                    DomainState.Success(completedEntity.toDomain())
-                }
-                is Remote.Failure -> {
-                    // Update status to FAILED
-                    val failedEntity = transactionEntity.copy(status = TransactionStatus.FAILED.name)
-                    transactionDao.insertTransaction(failedEntity)
-                    DomainState.Error(result.error)
-                }
-                is Remote.ValidationError -> {
-                    // Update status to FAILED
-                    val failedEntity = transactionEntity.copy(status = TransactionStatus.FAILED.name)
-                    transactionDao.insertTransaction(failedEntity)
-                    val errorMsg = result.errors.entries.joinToString(", ") {
-                        "${it.key}: ${it.value.joinToString()}"
-                    }
-                    DomainState.Error("Validation failed: $errorMsg")
-                }
-                is Remote.UnAuthenticated -> {
-                    // Update status to FAILED
-                    val failedEntity = transactionEntity.copy(status = TransactionStatus.FAILED.name)
-                    transactionDao.insertTransaction(failedEntity)
-                    DomainState.Error("Authentication required")
-                }
+        // Save to local database first
+        transactionDao.insertTransaction(transactionEntity)
+
+        // Send to remote API
+        return when (val result = remoteApi.saveTransaction(transactionEntity.toDto())) {
+            is Remote.Success -> {
+                // Update status to COMPLETED
+                val completedEntity =
+                    transactionEntity.copy(status = TransactionStatus.COMPLETED.name)
+                transactionDao.updateTransaction(completedEntity)
+                DomainState.Success(completedEntity.toDomain())
             }
-        } catch (e: Exception) {
-            DomainState.Error(e.message ?: "Failed to process payment")
+
+            is Remote.Failure -> {
+                // Update status to FAILED
+                val failedEntity = transactionEntity.copy(status = TransactionStatus.FAILED.name)
+                transactionDao.insertTransaction(failedEntity)
+                DomainState.Error(result.error)
+            }
+
+            is Remote.ValidationError -> {
+                // Update status to FAILED
+                val failedEntity = transactionEntity.copy(status = TransactionStatus.FAILED.name)
+                transactionDao.insertTransaction(failedEntity)
+                val errorMsg = result.errors.entries.joinToString(", ") {
+                    "${it.key}: ${it.value.joinToString()}"
+                }
+                DomainState.Error("Validation failed: $errorMsg")
+            }
+
+            is Remote.UnAuthenticated -> {
+                // Update status to FAILED
+                val failedEntity = transactionEntity.copy(status = TransactionStatus.FAILED.name)
+                transactionDao.insertTransaction(failedEntity)
+                DomainState.Error("Authentication required")
+            }
         }
     }
 }

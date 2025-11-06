@@ -2,19 +2,24 @@ package ke.kiura.cashi.presentation.sending
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
+
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import ke.kiura.cashi.R
 import ke.kiura.cashi.domain.model.Currency
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SendPaymentScreen(
-    viewModel: SendPaymentViewModel,
-    onNavigateToHistory: () -> Unit
+    onNavigateBack: () -> Unit
 ) {
+    val viewModel: SendPaymentViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsState()
     var showCurrencyDropdown by remember { mutableStateOf(false) }
 
@@ -22,26 +27,15 @@ fun SendPaymentScreen(
         topBar = {
             TopAppBar(
                 title = { Text("Send Payment") },
-                actions = {
-                    TextButton(onClick = onNavigateToHistory) {
-                        Text("History")
+                navigationIcon = {
+                    IconButton(onClick = onNavigateBack) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_back),
+                            contentDescription = "Back"
+                        )
                     }
                 }
             )
-        },
-        snackbarHost = {
-            if (uiState.successMessage != null || uiState.errorMessage != null) {
-                Snackbar(
-                    modifier = Modifier.padding(16.dp),
-                    action = {
-                        TextButton(onClick = { viewModel.clearMessages() }) {
-                            Text("Dismiss")
-                        }
-                    }
-                ) {
-                    Text(uiState.successMessage ?: uiState.errorMessage ?: "")
-                }
-            }
         }
     ) { paddingValues ->
         Column(
@@ -62,7 +56,7 @@ fun SendPaymentScreen(
                 value = uiState.recipientEmail,
                 onValueChange = { viewModel.onRecipientEmailChanged(it) },
                 label = { Text("Recipient Email") },
-                placeholder = { Text("recipient@example.com") },
+                placeholder = { Text("Email address") },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !uiState.isLoading,
                 singleLine = true,
@@ -122,6 +116,76 @@ fun SendPaymentScreen(
                 }
             }
 
+            // Error Message Card (Red)
+            if (uiState.errorMessage != null) {
+                Card(
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = uiState.errorMessage!!,
+                            color = MaterialTheme.colorScheme.onErrorContainer,
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.weight(1f)
+                        )
+                        IconButton(
+                            onClick = { viewModel.clearMessages() },
+                            modifier = Modifier.size(24.dp)
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_close_small),
+                                contentDescription = "Close",
+                                tint = MaterialTheme.colorScheme.onErrorContainer
+                            )
+                        }
+                    }
+                }
+            }
+
+            // Success Message Card (Green)
+            if (uiState.successMessage != null) {
+                Card(
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = uiState.successMessage!!,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.weight(1f)
+                        )
+                        IconButton(
+                            onClick = { viewModel.clearMessages() },
+                            modifier = Modifier.size(24.dp)
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_close_small),
+                                contentDescription = "Close",
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                        }
+                    }
+                }
+            }
+
             Spacer(modifier = Modifier.weight(1f))
 
             // Send Payment Button
@@ -141,38 +205,6 @@ fun SendPaymentScreen(
                     )
                 } else {
                     Text("Send Payment")
-                }
-            }
-
-            // Error Message
-            if (uiState.errorMessage != null) {
-                Card(
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.errorContainer
-                    ),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = uiState.errorMessage!!,
-                        color = MaterialTheme.colorScheme.onErrorContainer,
-                        modifier = Modifier.padding(16.dp)
-                    )
-                }
-            }
-
-            // Success Message
-            if (uiState.successMessage != null) {
-                Card(
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer
-                    ),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = uiState.successMessage!!,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer,
-                        modifier = Modifier.padding(16.dp)
-                    )
                 }
             }
         }
