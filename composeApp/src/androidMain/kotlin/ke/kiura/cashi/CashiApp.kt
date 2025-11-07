@@ -1,14 +1,14 @@
 package ke.kiura.cashi
 
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import ke.kiura.cashi.presentation.history.TransactionHistoryScreen
-import ke.kiura.cashi.presentation.history.TransactionHistoryViewModel
 import ke.kiura.cashi.presentation.sending.SendPaymentScreen
-import ke.kiura.cashi.presentation.sending.SendPaymentViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import org.koin.androidx.compose.koinViewModel
-
 
 
 @Composable
@@ -23,6 +23,7 @@ fun CashiApp() {
                     onNavigateBack = { currentScreen = Screen.TransactionHistory }
                 )
             }
+
             Screen.TransactionHistory -> {
                 TransactionHistoryScreen(
                     onNavigateToSendPayment = { currentScreen = Screen.SendPayment }

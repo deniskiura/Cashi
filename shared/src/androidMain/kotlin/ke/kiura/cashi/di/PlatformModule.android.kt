@@ -2,9 +2,10 @@ package ke.kiura.cashi.di
 
 import android.content.Context
 import androidx.room.Room
+import com.google.firebase.firestore.FirebaseFirestore
 import ke.kiura.cashi.db.AppDatabase
+import ke.kiura.cashi.remote.FirebaseRemoteApi
 import ke.kiura.cashi.remote.RemoteApi
-import ke.kiura.cashi.remote.RemoteApiImpl
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
@@ -25,8 +26,13 @@ actual val platformModule: Module = module {
 
     single { get<AppDatabase>().transactionDao() }
 
-    // Remote API
+    // Firebase
+    single<FirebaseFirestore> {
+        FirebaseFirestore.getInstance()
+    }
+
+    // Remote API - Using Firebase
     single<RemoteApi> {
-        RemoteApiImpl()
+        FirebaseRemoteApi(get())
     }
 }

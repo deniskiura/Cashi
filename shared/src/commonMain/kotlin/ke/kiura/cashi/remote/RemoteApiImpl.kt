@@ -27,4 +27,13 @@ class RemoteApiImpl : RemoteApi {
             else -> Remote.Failure("Network error: Unable to connect to payment service")
         }
     }
+
+    override suspend fun getTransactions(): Remote<List<TransactionDto>> {
+        // Simulate network delay
+        delay(800)
+
+        // Simulate returning empty list for mock
+        // In real implementation, this would fetch from backend
+        return Remote.Success(emptyList())
+    }
 }

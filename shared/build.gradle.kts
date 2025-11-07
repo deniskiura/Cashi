@@ -19,6 +19,11 @@ kotlin {
         androidMain.dependencies {
             // Koin Android
             implementation(libs.koin.android)
+
+            // Firebase
+            implementation(libs.firebase.firestore)
+            implementation(libs.firebase.common)
+            implementation(libs.kotlinx.coroutines.play.services)
         }
         val androidUnitTest by getting {
             dependencies {

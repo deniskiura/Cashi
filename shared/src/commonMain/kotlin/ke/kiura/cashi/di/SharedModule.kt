@@ -28,7 +28,8 @@ val sharedModule = module {
 
     single<TransactionRepository> {
         TransactionRepositoryImpl(
-            transactionDao = get()
+            transactionDao = get(),
+            remoteApi = get()
         )
     }
 
