@@ -19,5 +19,7 @@ data class Transaction @OptIn(ExperimentalTime::class) constructor(
 enum class TransactionStatus {
     PENDING,
     COMPLETED,
-    FAILED
+    FAILED;
+
+    companion object
 }

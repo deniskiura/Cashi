@@ -36,7 +36,7 @@ class PaymentRepositoryImpl(
         val transactionEntity = payment.toEntity(
             id = transactionId,
             timestamp = timestamp,
-            status = TransactionStatus.PENDING
+            status = TransactionStatus.entries.random()  // Random status for demo purposes
         )
 
         // Save to local database first
@@ -78,3 +78,4 @@ class PaymentRepositoryImpl(
         }
     }
 }
+
