@@ -15,20 +15,18 @@ kotlin {
         }
     }
     
-//    listOf(
-//        iosArm64(),
-//        iosSimulatorArm64()
-//    ).forEach { iosTarget ->
-//        iosTarget.binaries.framework {
-//            baseName = "Shared"
-//            isStatic = true
-//        }
-//    }
-    
     sourceSets {
         androidMain.dependencies {
             // Koin Android
             implementation(libs.koin.android)
+        }
+        val androidUnitTest by getting {
+            dependencies {
+                implementation(libs.cucumber.java)
+                implementation(libs.cucumber.junit)
+                implementation(libs.spek.dsl)
+                implementation(libs.spek.runner.junit5)
+            }
         }
         commonMain.dependencies {
             // Coroutines
@@ -55,6 +53,11 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+            implementation(libs.kotest.assertions.core)
+            implementation(libs.kotest.property)
+            implementation(libs.mockk)
+            implementation(libs.turbine)
+            implementation(libs.kotlinx.coroutines.test)
         }
     }
 }
