@@ -5,6 +5,8 @@ A modern FinTech mobile application built with Kotlin Multiplatform (KMP) that e
 ## Considerations and trade offs
 - I added **room database** for local caching of the data. While firebase natively adds offline capability, abstracting the application means that we might have a backend service that does not support local caching.
 - Since I did not add a backend service, I did not implement JMeter
+- For Demo purposes, I randomize the transaction status before sending the transaction to firebase.
+- You need to import google-services.json to this project before running. Instructions below
 
 ##  Features
 
