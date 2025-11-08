@@ -166,7 +166,7 @@ Cashi/
 ### 1. Clone the Repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/deniskiura/Cashi
 cd Cashi
 ```
 
@@ -188,20 +188,7 @@ cd Cashi
 1. In Firebase Console → Build → Firestore Database
 2. Click "Create database"
 3. Start in **test mode** (for development)
-
-**Test Mode Rules** (expires 30 days):
-```javascript
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if request.time < timestamp.date(2025, 3, 1);
-    }
-  }
-}
 ```
-
-For detailed Firebase setup instructions, see [FIREBASE_SETUP.md](./FIREBASE_SETUP.md)
 
 ### 3. Build the Project
 
