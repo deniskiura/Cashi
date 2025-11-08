@@ -495,7 +495,7 @@ val platformModule = module {
 }
 ```
 
-## 📱 Screenshots & Demo
+##  Screens
 
 ### App Screens
 
@@ -512,28 +512,13 @@ val platformModule = module {
    - Real-time updates
    - Empty state when no transactions
 
-### Running a Demo
+### Running the app
 
-```bash
-# 1. Start emulator or connect device
-adb devices
+- Make sure that the project has been synced. 
+- You might need internet connection to download all the necessary libraries.
+- Make sure you have a real device or an emulator already set up
+- Run the app in Android Studio 
 
-# 2. Install app
-./gradlew :composeApp:installDebug
-
-# 3. Send a test payment
-# - Open app
-# - Navigate to Send Payment
-# - Enter email: test@example.com
-# - Enter amount: 10000 (= $100.00)
-# - Select currency: USD
-# - Tap Send Payment
-
-# 4. View transaction history
-# - Navigate to History tab
-# - See the transaction appear
-# - Check Firebase Console to verify data
-```
 
 ## Code Quality
 
@@ -547,147 +532,6 @@ adb devices
 -  **Coroutines**: Structured concurrency with proper scope management
 -  **Error Handling**: Explicit error states, no exceptions in business logic
 
-### Code Style
-
-- Follows [Kotlin Coding Conventions](https://kotlinlang.org/docs/coding-conventions.html)
-- Clear naming conventions
-- Comprehensive documentation
-- Meaningful variable and function names
-
-##  Future Enhancements
-
-### Backend API Integration
-
-Currently using Firebase directly. Can be extended with:
-
-```kotlin
-// Ktor HTTP Client (already configured)
-class KtorRemoteApi(private val client: HttpClient) : RemoteApi {
-    override suspend fun saveTransaction(transaction: TransactionDto): Remote<Unit> {
-        return try {
-            client.post("/payments") {
-                setBody(transaction)
-            }
-            Remote.Success(Unit)
-        } catch (e: Exception) {
-            Remote.Failure(e.message ?: "Network error")
-        }
-    }
-}
-```
-
-### iOS Support
-
-KMP architecture is ready for iOS:
-
-1. Add `iosMain` source set
-2. Implement platform-specific dependencies (Firebase iOS SDK)
-3. Create SwiftUI views
-4. Use shared business logic
-
-### Performance Testing (JMeter)
-
-Create test plan for API endpoints:
-
-```xml
-<!-- JMeter Test Plan -->
-<TestPlan>
-  <ThreadGroup threads="5" rampUp="1" loops="10">
-    <HTTPSampler method="POST" path="/payments">
-      <JSONPostProcessor>
-        <responseTime>
-          <assertion lessThan="500ms" />
-        </responseTime>
-      </JSONPostProcessor>
-    </HTTPSampler>
-  </ThreadGroup>
-</TestPlan>
-```
-
-### UI Testing (Appium)
-
-Automated UI tests:
-
-```kotlin
-// Appium test example
-@Test
-fun testSendPayment() {
-    // Find elements
-    val emailInput = driver.findElement(By.id("email_input"))
-    val amountInput = driver.findElement(By.id("amount_input"))
-    val sendButton = driver.findElement(By.id("send_button"))
-
-    // Perform actions
-    emailInput.sendKeys("test@example.com")
-    amountInput.sendKeys("10000")
-    sendButton.click()
-
-    // Verify
-    val successMessage = driver.findElement(By.id("success_message"))
-    assert(successMessage.isDisplayed)
-}
-```
-
-##  Documentation
-
-- **[FIREBASE_SETUP.md](./FIREBASE_SETUP.md)**: Complete Firebase configuration guide
-- **[FIREBASE_IMPLEMENTATION.md](./FIREBASE_IMPLEMENTATION.md)**: Technical implementation details
-- **[TESTING.md](./TESTING.md)**: Comprehensive testing guide
-- **[composeApp/README.md](./composeApp/README.md)**: Android app specific documentation
-
-##  Contributing
-
-This is a coding challenge project. For production use:
-
-1. Fork the repository
-2. Create a feature branch
-3. Implement changes with tests
-4. Ensure all tests pass
-5. Submit a pull request
-
-##  License
-
-This project is created for the Cashi Mobile App Challenge.
-
-##  Author
-
-Developed as part of the Cashi Senior Android Developer Technical Challenge.
-
-##  Challenge Completion Checklist
-
-###  Core Requirements
-- [x] **Send Payment**: Email, amount, currency input with validation
-- [x] **Transaction History**: Display past payments from Firestore
-- [x] **Backend Integration**: Firebase Firestore for data storage
-- [x] **KMP Architecture**: Shared business logic in `shared` module
-- [x] **Jetpack Compose**: Modern Android UI
-- [x] **Koin**: Dependency injection
-- [x] **Clean Architecture**: Domain, Data, Presentation layers
-
-###  Testing
-- [x] **BDD Tests**: Cucumber scenarios for payment flow
-- [x] **Unit Tests**: Comprehensive coverage of business logic
-- [x] **Integration Tests**: Repository and use case tests
-- [x] **Kotest**: Kotlin-first assertions
-- [x] **MockK**: Mocking for isolated testing
-
-###  Firebase
-- [x] Firestore integration for transaction storage
-- [x] Real-time data synchronization
-- [x] Offline support with local caching
-- [x] Proper error handling
-
-###  Code Quality
-- [x] Clean code with meaningful names
-- [x] SOLID principles
-- [x] Comprehensive documentation
-- [x] Type-safe error handling
-
-###  Optional Enhancements (Future Work)
-- [ ] **Appium**: UI automation tests
-- [ ] **JMeter**: API performance testing
-- [ ] **iOS Support**: Extend KMP to iOS platform
-- [ ] **Backend API**: REST API with POST /payments endpoint
 
 ##  Troubleshooting
 
