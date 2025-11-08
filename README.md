@@ -2,9 +2,13 @@
 
 A modern FinTech mobile application built with Kotlin Multiplatform (KMP) that enables users to send payments and view transaction history. This project demonstrates clean architecture, Firebase integration, comprehensive testing, and cross-platform capabilities.
 
-## 📱 Features
+## Considerations and trade offs
+- I added **room database** for local caching of the data. While firebase natively adds offline capability, abstracting the application means that we might have a backend service that does not support local caching.
+- Since I did not add a backend service, I did not implement JMeter
 
-### ✅ Implemented Features
+##  Features
+
+### Implemented Features
 
 - **Send Payment**: Users can send payments by entering:
   - Recipient's email address
@@ -125,7 +129,7 @@ Cashi/
 5. **Offline-First**: Local database as primary data source with Firebase sync
 6. **Dependency Injection**: Koin for managing dependencies
 
-## 🚀 Technology Stack
+## Technology Stack
 
 ### Core Technologies
 - **Kotlin Multiplatform (KMP)**: Share business logic across platforms
@@ -147,7 +151,7 @@ Cashi/
 - **Kotlinx DateTime**: Cross-platform date/time handling
 - **Ktor Client**: HTTP client (configured but using Firebase for backend)
 
-## 📋 Prerequisites
+## Prerequisites
 
 - **JDK 11** or higher
 - **Android Studio** Ladybug | 2024.2.1 or later
@@ -155,7 +159,7 @@ Cashi/
 - **Gradle 8.13** (included via wrapper)
 - **Firebase Project** with Firestore enabled
 
-## 🔧 Setup Instructions
+## Setup Instructions
 
 ### 1. Clone the Repository
 
@@ -214,7 +218,7 @@ For detailed Firebase setup instructions, see [FIREBASE_SETUP.md](./FIREBASE_SET
 1. Open project in Android Studio
 2. Wait for Gradle sync to complete
 3. Select `composeApp` configuration
-4. Click Run ▶️
+4. Click Run 
 
 #### From Command Line
 ```bash
@@ -225,7 +229,7 @@ For detailed Firebase setup instructions, see [FIREBASE_SETUP.md](./FIREBASE_SET
 ./gradlew :composeApp:installDebug && adb shell am start -n ke.kiura.cashi/.MainActivity
 ```
 
-## 🧪 Testing
+## Testing
 
 The project includes comprehensive testing at multiple levels:
 
@@ -240,16 +244,16 @@ Test business logic, data layer, and domain models:
 # Run shared module tests
 ./gradlew :shared:testDebugUnitTest
 
-# Run with coverage
-./gradlew :shared:testDebugUnitTestCoverage
+# Run with coverage (generates HTML report)
+./gradlew :shared:testDebugUnitTest :shared:koverHtmlReportDebug
 ```
 
 **Test Coverage Includes:**
-- ✅ Payment validation (email format, amount > 0, currency support)
-- ✅ Transaction mapping (DTO ↔ Domain ↔ Entity)
-- ✅ Repository operations (save, fetch, update)
-- ✅ Use case logic (SendPayment, GetTransactions)
-- ✅ Error handling and edge cases
+- Payment validation (email format, amount > 0, currency support)
+- Transaction mapping (DTO ↔ Domain ↔ Entity)
+- Repository operations (save, fetch, update)
+- Use case logic (SendPayment, GetTransactions)
+- Error handling and edge cases
 
 ### BDD Tests (Cucumber)
 
@@ -263,13 +267,13 @@ Behavior-driven tests for user scenarios:
 **Feature File**: `shared/src/androidUnitTest/resources/features/send_payment.feature`
 
 **Scenarios Covered:**
-1. ✅ Successfully send a payment with valid details
-2. ✅ Fail to send payment with invalid email
-3. ✅ Fail to send payment with zero amount
-4. ✅ Fail to send payment with negative amount
-5. ✅ Successfully send payment with different currencies
-6. ✅ Handle API failure gracefully
-7. ✅ Handle validation error from API
+1. Successfully send a payment with valid details
+2. Fail to send payment with invalid email
+3. Fail to send payment with zero amount
+4. Fail to send payment with negative amount
+5. Successfully send payment with different currencies
+6. Handle API failure gracefully
+7. Handle validation error from API
 
 **Example Scenario:**
 ```gherkin
@@ -286,9 +290,9 @@ Scenario: Successfully send a payment with valid details
 
 After running tests, view reports at:
 - **Unit Tests**: `shared/build/reports/tests/testDebugUnitTest/index.html`
-- **Coverage**: `shared/build/reports/coverage/testDebugUnitTest/html/index.html`
+- **Coverage**: `shared/build/reports/kover/htmlDebug/index.html`
 
-## 📊 Project Structure Details
+## Project Structure Details
 
 ### Shared Module (`shared/`)
 
@@ -377,7 +381,7 @@ fun TransactionHistoryScreen(viewModel: TransactionHistoryViewModel) {
 }
 ```
 
-## 🔐 Data Flow
+## Data Flow
 
 ### Sending a Payment
 
@@ -423,7 +427,7 @@ Show local data   Sync Firebase     Update UI
 (instant)         (background)      (reactive)
 ```
 
-## 🎯 Key Features Implementation
+##  Key Features Implementation
 
 ### 1. Input Validation
 
@@ -542,17 +546,17 @@ adb devices
 # - Check Firebase Console to verify data
 ```
 
-## 🔍 Code Quality
+## Code Quality
 
 ### Best Practices
 
-- ✅ **SOLID Principles**: Single responsibility, dependency inversion
-- ✅ **Clean Architecture**: Clear layer separation
-- ✅ **Immutability**: Data classes with `val` properties
-- ✅ **Type Safety**: Sealed classes for state and results
-- ✅ **Reactive Programming**: Kotlin Flow for data streams
-- ✅ **Coroutines**: Structured concurrency with proper scope management
-- ✅ **Error Handling**: Explicit error states, no exceptions in business logic
+-  **SOLID Principles**: Single responsibility, dependency inversion
+-  **Clean Architecture**: Clear layer separation
+-  **Immutability**: Data classes with `val` properties
+-  **Type Safety**: Sealed classes for state and results
+-  **Reactive Programming**: Kotlin Flow for data streams
+-  **Coroutines**: Structured concurrency with proper scope management
+-  **Error Handling**: Explicit error states, no exceptions in business logic
 
 ### Code Style
 
@@ -561,7 +565,7 @@ adb devices
 - Comprehensive documentation
 - Meaningful variable and function names
 
-## 🚧 Future Enhancements
+##  Future Enhancements
 
 ### Backend API Integration
 
@@ -635,14 +639,14 @@ fun testSendPayment() {
 }
 ```
 
-## 📖 Documentation
+##  Documentation
 
 - **[FIREBASE_SETUP.md](./FIREBASE_SETUP.md)**: Complete Firebase configuration guide
 - **[FIREBASE_IMPLEMENTATION.md](./FIREBASE_IMPLEMENTATION.md)**: Technical implementation details
 - **[TESTING.md](./TESTING.md)**: Comprehensive testing guide
 - **[composeApp/README.md](./composeApp/README.md)**: Android app specific documentation
 
-## 🤝 Contributing
+##  Contributing
 
 This is a coding challenge project. For production use:
 
@@ -652,17 +656,17 @@ This is a coding challenge project. For production use:
 4. Ensure all tests pass
 5. Submit a pull request
 
-## 📄 License
+##  License
 
 This project is created for the Cashi Mobile App Challenge.
 
-## 👥 Author
+##  Author
 
 Developed as part of the Cashi Senior Android Developer Technical Challenge.
 
-## 🎯 Challenge Completion Checklist
+##  Challenge Completion Checklist
 
-### ✅ Core Requirements
+###  Core Requirements
 - [x] **Send Payment**: Email, amount, currency input with validation
 - [x] **Transaction History**: Display past payments from Firestore
 - [x] **Backend Integration**: Firebase Firestore for data storage
@@ -671,40 +675,36 @@ Developed as part of the Cashi Senior Android Developer Technical Challenge.
 - [x] **Koin**: Dependency injection
 - [x] **Clean Architecture**: Domain, Data, Presentation layers
 
-### ✅ Testing
+###  Testing
 - [x] **BDD Tests**: Cucumber scenarios for payment flow
 - [x] **Unit Tests**: Comprehensive coverage of business logic
 - [x] **Integration Tests**: Repository and use case tests
 - [x] **Kotest**: Kotlin-first assertions
 - [x] **MockK**: Mocking for isolated testing
 
-### ✅ Firebase
+###  Firebase
 - [x] Firestore integration for transaction storage
 - [x] Real-time data synchronization
 - [x] Offline support with local caching
 - [x] Proper error handling
 
-### ✅ Code Quality
+###  Code Quality
 - [x] Clean code with meaningful names
 - [x] SOLID principles
 - [x] Comprehensive documentation
 - [x] Type-safe error handling
 
-### 📋 Optional Enhancements (Future Work)
+###  Optional Enhancements (Future Work)
 - [ ] **Appium**: UI automation tests
 - [ ] **JMeter**: API performance testing
 - [ ] **iOS Support**: Extend KMP to iOS platform
 - [ ] **Backend API**: REST API with POST /payments endpoint
 
-## 🆘 Troubleshooting
+##  Troubleshooting
 
 ### Common Issues
 
 **Build Error: "google-services.json is missing"**
-```bash
-# Solution: Download from Firebase Console and place in composeApp/
-cp ~/Downloads/google-services.json composeApp/
-```
 
 **Firebase Permission Denied**
 ```bash
@@ -729,15 +729,3 @@ adb logcat | grep Cashi
 # Verify Firebase configuration
 ls -la composeApp/google-services.json
 ```
-
-## 📞 Support
-
-For questions or issues:
-1. Check documentation files in the repository
-2. Review Firebase Console for backend issues
-3. Check test reports for test failures
-4. Review logcat for runtime issues
-
----
-
-**Built with ❤️ using Kotlin Multiplatform, Jetpack Compose, and Firebase**

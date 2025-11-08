@@ -27,6 +27,7 @@ mockk = "1.13.14"
 turbine = "1.2.0"
 cucumber = "7.20.1"
 spek = "2.0.19"
+kover = "0.8.3"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -84,3 +85,4 @@ kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", versio
 googleServices = { id = "com.google.gms.google-services", version.ref = "google-services" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 androidx-room = { id = "androidx.room", version.ref = "room" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }

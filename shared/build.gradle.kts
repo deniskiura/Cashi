@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.androidx.room)
+    alias(libs.plugins.kover)
 }
 
 kotlin {
@@ -92,4 +93,19 @@ configurations.all {
 
 room {
     schemaDirectory("$projectDir/schemas")
+}
+
+kover {
+    reports {
+        filters {
+            excludes {
+                classes(
+                    "*BuildConfig",
+                    "*.di.*",
+                    "*.databinding.*",
+                    "*.generated.*"
+                )
+            }
+        }
+    }
 }
